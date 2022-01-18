@@ -1,0 +1,1 @@
+All the annotations will be placed in this directory, so it is necessary to have it in order to save the annotations. If you want to change the path of the directory, change it in write_annotation function in python scripts.

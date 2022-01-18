@@ -1,0 +1,17 @@
+Category          Total Detections
+person            2
+bicycle           0
+car               2
+motorbike         0
+aeroplane         0
+bus               0
+train             0
+truck             0
+boat              0
+traffic light     0
+fire hydrant      0
+stop sign         0
+parking meter     0
+bench             0
+skateboard        0
+

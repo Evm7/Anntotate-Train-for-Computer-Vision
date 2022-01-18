@@ -1,0 +1,5 @@
+Category 	StartFrame	EndFrame
+car_0		0			34
+car_1		0			92
+person_2	0			92
+person_3	59			89
