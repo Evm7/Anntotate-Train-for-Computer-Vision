@@ -9,35 +9,12 @@ from tkinter import simpledialog
 import tqdm
 import json
 from categories import *
-
+from ActionSeg import ActionSeg
 
 sys.path.append("..")
 from paths import *
 
-class TrackerObject(object):
-    def __init__(self, verb, complement, startFrame, id):
-        self.verb = verb
-        self.complement = complement
-        self.startFrame = startFrame
-        self.id = id
-        self.endFrame = None
 
-    def endTrack(self, endFrame):
-        self.endFrame = endFrame
-
-    def getDict(self):
-        return {"verb": self.verb,
-                "complement" : self.complement,
-                "startFrame" : self.startFrame,
-                "endFrame": self.endFrame,
-                "id": self.id
-                }
-
-    def __repr__(self):
-        return "{} {} with ID {}: {} - {}".format(self.verb, self.complement, self.id, self.startFrame, self.endFrame)
-
-    def __str__(self):
-        return "{} {} with ID {}: {} - {}".format(self.verb, self.complement, self.id, self.startFrame, self.endFrame)
 
 class ButtonsDisplay(object):
     def __init__(self, categories, label):
@@ -71,7 +48,7 @@ class ButtonsDisplay(object):
         self.win.destroy()
 
 
-class Annotation(TrackerObject):
+class Annotation(ActionSeg):
     def __init__(self):
         # Dictionary which contains IDs as keys and Categories as Values
         self.objects = {}
@@ -204,7 +181,7 @@ class Annotation(TrackerObject):
                         name = self.input_message("START", "Write Action that started.")
                         if name != "quit" and name != None:
                             curr_action = name
-                            self.objects[id] = TrackerObject(name, frameId, id)
+                            self.objects[id] = ActionSeg(name, frameId, id)
                             if (id-1) in self.objects:
                                 if self.objects[id-1].endFrame ==None:
                                     self.objects[id-1].endTrack(frameId)
@@ -219,7 +196,7 @@ class Annotation(TrackerObject):
                                 print("Error solved, continue with the tracking")
                             else:
                                 print("Verb: {} | Object: {}".format(verb, complement))
-                                self.objects[id] = TrackerObject(verb, complement, frameId, id)
+                                self.objects[id] = ActionSeg(verb, complement, frameId, id)
                                 if (id - 1) in self.objects:
                                     if self.objects[id - 1].endFrame == None:
                                         self.objects[id - 1].endTrack(frameId)

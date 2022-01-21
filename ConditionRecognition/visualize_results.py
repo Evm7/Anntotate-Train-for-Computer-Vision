@@ -3,21 +3,35 @@ import sys, glob, os
 import numpy as np
 import time, cv2, tqdm
 import argparse
-from ActionSeg import ActionSeg
+from ConditionsClass import Condition
 
 sys.path.append("..")
 from paths import *
+from ActionSegmentation.ActionSeg import ActionSeg
 
 template_vid = video_paths+ "P10000{}.MP4"
-template_annotations = action_outputs + "{}.json"
+template_vid_det = video_outputs+ "video_annotation_{}.mp4"
 
-def readAnnotations(video_id):
-    filename  = template_annotations.format(video_id)
+template_action = actions_outputs + "{}.json"
+template_cond = conditions_outputs + "{}.json"
+
+
+def readActions(video_id):
+    filename  = template_action.format(video_id)
     with open(filename, 'r') as f:
         data = json.load(f)
     objects = {}
     for k, d in data.items():
         objects[d["id"]] = ActionSeg(d["verb"], d["complement"], d["startFrame"], d["id"], endFrame= d["endFrame"])
+    return objects
+
+def readConditions(video_id, length=16):
+    filename  = template_cond.format(video_id)
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    objects = {}
+    for k, d in data.items():
+        objects[d["id"]] = Condition(d["label"], d["startFrame"],  d["endFrame"], d["id"], d["action_id_pre"], d["action_id_post"], d["position"])
     return objects
 
 def prepare_video(input_path, output_path, scale=1):
@@ -49,12 +63,22 @@ def reformat_frame(frame, size, rotate=False):
         return image
     return resized_frame
 
-def draw_label(image, label):
+def draw_labels_actions(image, label):
     # read the image with OpenCV
     #image = cv2.cvtColor(np.asarray(image), cv2.COLOR_BGR2RGB)
     cv2.putText(image, label, (int(20), int(20)),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2,
                 lineType=cv2.LINE_AA)
+    return image
+
+def draw_labels_conds(image, conds):
+    # read the image with OpenCV
+    #image = cv2.cvtColor(np.asarray(image), cv2.COLOR_BGR2RGB)
+    for i, cond in enumerate(conds):
+        color = (0,0,0) if cond.position else (255,0,255)
+        cv2.putText(image, cond.label, (int(30) , int(60)+ 30 *i),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2,
+                    lineType=cv2.LINE_AA)
     return image
 
 def getInfo(objects, frame_num):
@@ -63,13 +87,23 @@ def getInfo(objects, frame_num):
             return obj
     return None
 
-def processImage(objects, frame_num, image, size):
-    obj = getInfo(objects,frame_num)
-    if obj != None:
-        image = draw_label(image, obj.getLabel())
+def getInfos(objects, frame_num):
+    current = []
+    for obj in objects.values():
+        if obj.inbetween(frame_num):
+            current.append(obj)
+    return current
+
+def processImage(actions, conditions, frame_num, image, size):
+    act = getInfo(actions,frame_num)
+    if act != None:
+        image = draw_labels_actions(image, act.getLabel())
+
+    conds = getInfos(conditions, frame_num)
+    image = draw_labels_conds(image, conds)
     return image
 
-def processVideo(objects, input_video_path, output_video_path, scale=1):
+def processVideo(actions, conditions, input_video_path, output_video_path, scale=1):
     cap, out, (fps, size, frame_length) = prepare_video(input_video_path, output_video_path,  scale=scale)
     frame_count = 0  # to count total frames
 
@@ -84,7 +118,7 @@ def processVideo(objects, input_video_path, output_video_path, scale=1):
         if ret:
             pbar.update(1)
             frame = reformat_frame(frame, size)
-            frame = processImage(objects, frame_count, frame, size )
+            frame = processImage(actions, conditions, frame_count, frame, size )
             out.write(frame)
 
             frame_count += 1
@@ -106,15 +140,19 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Visualize a video.')
     parser.add_argument('-v', metavar='video', help='Path to input video file', required=True)
     args = parser.parse_args()
-
     return args.v
 
-print("[INFO]... Importing Annotations")
 video_id = parse_arguments()
 
-actions = readAnnotations(video_id)
+print("Proceeding with the creation of the labeled video {}".format(video_id))
+print("[INFO]... Importing Annotations")
 
-input_video =template_vid.format(video_id)
+actions = readActions(video_id)
+conditions = readConditions(video_id, length=16)
+
+input_video =template_vid_det.format(video_id)
+if not os.path.isfile(input_video):
+    input_video = template_vid.format(video_id)
 
 print("[INFO]... Starting to process the video")
-processVideo(actions, input_video, actions_videos + "{}_segmented.mp4".format(video_id), scale=1)
+processVideo(actions, conditions, input_video, conditions_videos + "{}_conditions.mp4".format(video_id), scale=1)

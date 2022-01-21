@@ -159,4 +159,4 @@ print(objects)
 input_video = video_paths + template_vid.format(video_id)
 
 print("[INFO]... Starting to process the video")
-processVideo(objects, input_video, "video_annotation.mp4", scale=1)
+processVideo(objects, input_video, "26_segmented.mp4", scale=1)
