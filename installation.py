@@ -17,7 +17,10 @@ to_create_dirs = { "output_base_dir" : output_base_dir,
                    "video_outputs" : video_outputs,
                  "coco_outputs" : coco_outputs,
                  "action_outputs" : action_outputs,
-                 "dataset_outputs" : dataset_outputs
+                 "dataset_outputs" : dataset_outputs,
+                   "actions_videos" : action_videos,
+                   "conditions_outputs" : conditions_outputs,
+                   "conditions_videos" : conditions_videos
                  }
 
 for label, value in to_create_dirs.items():

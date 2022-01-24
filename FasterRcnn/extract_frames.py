@@ -1,12 +1,13 @@
 import os, sys
-sys.append("..")
+sys.path.append("..")
 from paths import *
 from tqdm import tqdm
 
 def extractFrames(filespath):
   basename_without_ext = os.path.splitext(os.path.basename(filespath))[0]
   dirname = os.path.dirname(filespath)
-  new_base_dir = dirname.replace("videos", "frames")
+  # new_base_dir = dirname.replace("videos", "frames")
+  new_base_dir = dataset_outputs + "frames/"
   if not os.path.isdir(new_base_dir):
     os.mkdir(new_base_dir)
   new_dir = new_base_dir + "/" + basename_without_ext
@@ -17,6 +18,7 @@ def extractFrames(filespath):
 
 import glob
 files = [f for f in glob.glob(video_paths + "*.MP4", recursive=True)]
+print("Starting extracting frames of all videos in path {}".format(video_paths))
 for f in tqdm(files):
   extractFrames(f)
 

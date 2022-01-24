@@ -1,5 +1,9 @@
 import os, cv2, glob, json, tqdm
 from PIL import Image
+import sys
+sys.path.append("...")
+from paths import *
+
 categories = {
     "Eatables": ["Banana", "Carrot", "Kiwi", "Tomato", "Orange"],
     "Tools" : ["Knife", "Bowl", "Board"],
@@ -172,6 +176,7 @@ class COCOAnnotator():
             for m in mode:
                 if os.path.isdir(frames_path.format(m)):
                     dir_path = frames_path.format(m)
+
             if dir_path == "":
                 return False
             #for frame_num, bbox in tqdm.tqdm(annotations.items()):
@@ -231,7 +236,7 @@ class COCOAnnotator():
         Load all the annotations for all the videos annotated in the labels dataset.
         """
         videonames  = [os.path.basename(x) for x in glob.glob(self.labels_path+"*")]
-        print("[INFO] Starting to load annotations ...")
+        print("[INFO] Starting to load annotations from {}...".format(self.labels_path))
         for i, vid in enumerate(videonames):
             print("[PROGRESS] Annotations loading for video "+str(i) + " of " + str(len(videonames)))
             self.getAnnotations(vid)
@@ -247,10 +252,9 @@ class COCOAnnotator():
 
 
 if __name__ == '__main__':
-    dataset_path = "/home/dhrikarl/Desktop/VideosToys/dataset/"
     from coco_template import annotations_template
 
-    annotator = COCOAnnotator(dataset_path, annotations_template)
+    annotator = COCOAnnotator(dataset_outputs, annotations_template)
     annotator.loadAnnotations()
     annotator.writeTemplate()
     print("Saving Annotations")

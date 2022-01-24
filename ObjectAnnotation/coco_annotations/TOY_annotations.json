@@ -1,0 +1,111 @@
+{
+     "info": {
+          "description": "TUMTOY Dataset",
+          "url": "https://www.ei.tum.de/hcr/home/",
+          "version": "1.0",
+          "year": 2022,
+          "contributor": "TUM HCR",
+          "date_created": "2022/01/01"
+     },
+     "licenses": [],
+     "images": [],
+     "annotations": [],
+     "categories": [
+          {
+               "supercategory": null,
+               "id": 0,
+               "name": "HandRight",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 1,
+               "name": "kiwi",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 2,
+               "name": "Board",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 3,
+               "name": "Carrot",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 4,
+               "name": "Banana",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 5,
+               "name": "Tomato",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 6,
+               "name": "Knife",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 7,
+               "name": "Banana",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 8,
+               "name": "Orange",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 9,
+               "name": "Carrot",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 10,
+               "name": "Tomato",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 11,
+               "name": "Kiwi",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 12,
+               "name": "Kiti",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 13,
+               "name": "Orange",
+               "state": "Whole"
+          },
+          {
+               "supercategory": null,
+               "id": 14,
+               "name": "Kiwi",
+               "state": "Sliced"
+          },
+          {
+               "supercategory": null,
+               "id": 15,
+               "name": "HandLeft",
+               "state": "Whole"
+          }
+     ]
+}
