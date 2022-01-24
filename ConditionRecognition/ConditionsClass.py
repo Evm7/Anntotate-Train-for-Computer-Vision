@@ -1,5 +1,5 @@
 class Condition(object):
-    def __init__(self, label, startFrame, endFrame, id, action_id_pre, action_id_post, position):
+    def __init__(self, label, startFrame, endFrame, id, action_id_pre, action_id_post, position, videoname=""):
         self.label = label
         self.startFrame = startFrame
         self.id = id
@@ -7,6 +7,7 @@ class Condition(object):
         self.action_id_pre = action_id_pre
         self.action_id_post = action_id_post
         self.position=position # True pre, False post
+        self.videoname = videoname
 
     def getDict(self):
         return {"label": self.label,
@@ -15,7 +16,8 @@ class Condition(object):
                 "id": self.id,
                 "action_id_pre" : self.action_id_pre,
                 "action_id_post" : self.action_id_post,
-                "position" : self.position
+                "position" : self.position,
+                "filename":self.videoname
                 }
 
     def getLabel(self):

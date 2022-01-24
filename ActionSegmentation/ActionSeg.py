@@ -1,10 +1,12 @@
 class ActionSeg(object):
-    def __init__(self, verb, complement, startFrame, id, endFrame = None):
+    def __init__(self, verb, complement, startFrame, id, endFrame = None, videoname=""):
         self.verb = verb
         self.complement = complement
         self.startFrame = startFrame
         self.id = id
         self.endFrame = endFrame
+        self.videoname = videoname
+
 
     def endTrack(self, endFrame):
         self.endFrame = endFrame
@@ -14,7 +16,8 @@ class ActionSeg(object):
                 "complement" : self.complement,
                 "startFrame" : self.startFrame,
                 "endFrame": self.endFrame,
-                "id": self.id
+                "id": self.id,
+                "videofile": self.videoname
                 }
 
     def getLabel(self):

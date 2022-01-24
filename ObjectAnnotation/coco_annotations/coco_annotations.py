@@ -258,4 +258,4 @@ if __name__ == '__main__':
     annotator.loadAnnotations()
     annotator.writeTemplate()
     print("Saving Annotations")
-    annotator.saveAnnotations("TOY_annotations.json")
+    annotator.saveAnnotations("{}TOY_annotations.json".format(coco_outputs))
