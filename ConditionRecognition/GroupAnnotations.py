@@ -64,6 +64,14 @@ def groupConditionsActions(action_data, condition_data, videoname, last_id_actio
 
   return actions, conditions, last_id_a, last_id_c
 
+def createClassFile(classes, filename):
+  classes_ = {k:v for k, v in enumerate(classes)}
+  """
+  with open(filename, "w+") as f:
+    json.dump(classes_, f, indent=5)
+  """
+  return classes_
+
 import glob
 actions_files = [f for f in glob.glob(actions_outputs + "*.json", recursive=True)]
 print("Collection of all action segmentation annotations from path {}".format(actions_outputs))
@@ -83,8 +91,33 @@ for action_file in tqdm.tqdm(actions_files):
   else:
     print("Video '{}' has been Segmented in Actions but Conditions have not been labeled yet")
 
+
+# Create Classes files with the index of every label or class
+verbs_actions = list(set([x["verb"] for x in actions_list]))
+complements_actions = list(set([x["complement"] for x in actions_list]))
+action_classes = list(set([x["verb"] + "-" + x["complement"] for x in actions_list]))
+condition_classes = list(set([x["label"] for x in conditions_list]))
+
+tosave__ = {"verbs_actions": verbs_actions, "complements_actions": complements_actions, "action_classes": action_classes, "condition_classes": condition_classes }
+supercategories = {}
+for filename, classes in tosave__.items():
+  classes_ = createClassFile(classes, "{}{}.json".format(dataset_outputs + "conditions/", filename))
+  supercategories[filename]  = classes_
+
+# Transform the labels nouns to index based on the previous classes files created
+for action in actions_list:
+  action["label"] = action_classes.index(action["verb"]+"-"+action["complement"])
+  action["verb"] = verbs_actions.index(action["verb"])
+  action["complement"] = complements_actions.index(action["complement"])
+
+for condition in conditions_list:
+  condition["label"] = condition_classes.index(condition["label"])
+
 annotations_template["actions"] = actions_list
 annotations_template["conditions"] = conditions_list
+
+annotations_template["categories"] = supercategories
+
 
 output_file = dataset_outputs + "conditions/ConditionsAnnotations.json"
 with open(output_file, "w+") as f:
